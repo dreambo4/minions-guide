@@ -1,0 +1,10 @@
+# 開發用對比素材（版權劇照，只留本地）
+compare.html
+compare_refs/
+
+# Firebase
+.firebase/
+firebase-debug.log
+
+# macOS
+.DS_Store

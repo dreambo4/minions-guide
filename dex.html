@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>小小兵圖鑑</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍌</text></svg>">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="brand-dot"></span>小小兵實驗室</div>
+    <nav class="nav">
+      <a href="index.html">組裝工作台</a>
+      <a href="dex.html" aria-current="page">圖鑑</a>
+    </nav>
+  </header>
+
+  <main class="wrap">
+    <p class="eyebrow">Minion Dex</p>
+    <h1>小小兵圖鑑</h1>
+    <p class="lede">
+      全部 48 種零件排列組合（影迷整理的分類）一次看。有黃色標記的是電影裡出現過的具名角色——
+      點任何一張卡片可以看完整檔案，包括名字、個性和出場的《神偷奶爸》／《小小兵》系列電影。
+    </p>
+
+    <div class="filters" id="filters">
+      <div class="fgroup" data-group="eyes">
+        <span class="flabel">眼睛</span>
+        <button class="chip" data-v="all" aria-pressed="true">全部</button>
+        <button class="chip" data-v="one" aria-pressed="false">單眼</button>
+        <button class="chip" data-v="two" aria-pressed="false">雙眼</button>
+      </div>
+      <div class="fgroup" data-group="hair">
+        <span class="flabel">髮型</span>
+        <button class="chip" data-v="all" aria-pressed="true">全部</button>
+        <button class="chip" data-v="spiky" aria-pressed="false">刺蝟頭</button>
+        <button class="chip" data-v="sprout" aria-pressed="false">呆毛</button>
+        <button class="chip" data-v="combed" aria-pressed="false">中分</button>
+        <button class="chip" data-v="bald" aria-pressed="false">光頭</button>
+      </div>
+      <div class="fgroup" data-group="height">
+        <span class="flabel">身高</span>
+        <button class="chip" data-v="all" aria-pressed="true">全部</button>
+        <button class="chip" data-v="short" aria-pressed="false">矮</button>
+        <button class="chip" data-v="medium" aria-pressed="false">中等</button>
+        <button class="chip" data-v="tall" aria-pressed="false">高</button>
+      </div>
+      <div class="fgroup" data-group="girth">
+        <span class="flabel">體型</span>
+        <button class="chip" data-v="all" aria-pressed="true">全部</button>
+        <button class="chip" data-v="average" aria-pressed="false">標準</button>
+        <button class="chip" data-v="plump" aria-pressed="false">圓胖</button>
+      </div>
+      <div class="fgroup" data-group="named">
+        <button class="chip" data-v="named" aria-pressed="false">只看具名角色</button>
+      </div>
+      <span class="count" id="count"></span>
+    </div>
+
+    <div class="grid" id="grid"></div>
+  </main>
+
+  <div class="modal" id="modal" hidden>
+    <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <button class="modal-close" id="modal-close" aria-label="關閉">×</button>
+      <div id="modal-figure"></div>
+      <div id="modal-info"></div>
+    </div>
+  </div>
+
+  <footer>
+    非官方粉絲作品。角色設定整理自 Despicable Me Wiki 等公開資料；
+    《神偷奶爸》與《小小兵》系列版權屬 Illumination／Universal Pictures。
+  </footer>
+
+  <script src="js/minion.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

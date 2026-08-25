@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>小小兵實驗室</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍌</text></svg>">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="brand-dot"></span>小小兵實驗室</div>
+    <nav class="nav">
+      <a href="index.html" aria-current="page">組裝工作台</a>
+      <a href="dex.html">圖鑑</a>
+    </nav>
+  </header>
+
+  <main class="wrap">
+    <p class="eyebrow">Minion Assembly</p>
+    <h1>組裝工作台</h1>
+    <p class="lede">
+      依影迷整理的分類，小小兵由四個零件決定長相：眼睛（1 或 2 顆）、髮型（4 款）、
+      身高（3 種）、體型（標準／圓胖），共 2 × 4 × 3 × 2 = 48 種排列組合。
+      用左右箭頭逐段切換，或按「隨機生成」抽一隻——
+      如果剛好拼出電影裡出現過的角色，右邊會告訴你它是誰。
+    </p>
+
+    <div class="builder">
+      <div class="stage-col">
+      <div class="stage" id="stage">
+        <div class="slot">
+          <button class="arrow" data-trait="hair" data-dir="-1" aria-label="上一種髮型">&lt;</button>
+          <div>
+            <span class="slot-label">髮型</span>
+            <span class="slot-value" id="val-hair"></span>
+          </div>
+          <button class="arrow" data-trait="hair" data-dir="1" aria-label="下一種髮型">&gt;</button>
+        </div>
+        <div class="slot">
+          <button class="arrow" data-trait="eyes" data-dir="-1" aria-label="上一種眼睛">&lt;</button>
+          <div>
+            <span class="slot-label">眼睛</span>
+            <span class="slot-value" id="val-eyes"></span>
+          </div>
+          <button class="arrow" data-trait="eyes" data-dir="1" aria-label="下一種眼睛">&gt;</button>
+        </div>
+        <div class="slot">
+          <button class="arrow" data-trait="height" data-dir="-1" aria-label="上一種身高">&lt;</button>
+          <div>
+            <span class="slot-label">身高</span>
+            <span class="slot-value" id="val-height"></span>
+          </div>
+          <button class="arrow" data-trait="height" data-dir="1" aria-label="下一種身高">&gt;</button>
+        </div>
+        <div class="slot">
+          <button class="arrow" data-trait="girth" data-dir="-1" aria-label="上一種體型">&lt;</button>
+          <div>
+            <span class="slot-label">體型（標準／圓胖）</span>
+            <span class="slot-value" id="val-girth"></span>
+          </div>
+          <button class="arrow" data-trait="girth" data-dir="1" aria-label="下一種體型">&gt;</button>
+        </div>
+        <div class="minion-layer" id="minion-layer"></div>
+      </div>
+      <div class="stage-actions">
+        <button class="btn" id="btn-random">隨機生成</button>
+        <a class="btn btn-ghost" href="dex.html">到圖鑑看全部 48 種</a>
+      </div>
+      </div>
+
+      <aside class="panel">
+        <span class="idtag" id="combo-id"></span>
+        <h2>這一隻的檔案</h2>
+        <p class="sub">依目前零件組合即時比對電影角色資料庫。</p>
+        <div id="match-area"></div>
+        <div class="spec">
+          <div class="spec-k">眼睛</div>
+          <div class="spec-v" id="spec-eyes"></div>
+          <div class="spec-d" id="spec-eyes-d"></div>
+        </div>
+        <div class="spec">
+          <div class="spec-k">髮型</div>
+          <div class="spec-v" id="spec-hair"></div>
+          <div class="spec-d" id="spec-hair-d"></div>
+        </div>
+        <div class="spec">
+          <div class="spec-k">身高</div>
+          <div class="spec-v" id="spec-height"></div>
+          <div class="spec-d" id="spec-height-d"></div>
+        </div>
+        <div class="spec">
+          <div class="spec-k">體型</div>
+          <div class="spec-v" id="spec-girth"></div>
+          <div class="spec-d" id="spec-girth-d"></div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <footer>
+    非官方粉絲作品。角色設定整理自 Despicable Me Wiki 等公開資料；
+    《神偷奶爸》與《小小兵》系列版權屬 Illumination／Universal Pictures。
+  </footer>
+
+  <script src="js/minion.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

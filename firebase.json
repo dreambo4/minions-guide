@@ -1,0 +1,15 @@
+{
+  "hosting": {
+    "public": ".",
+    "ignore": [
+      "firebase.json",
+      ".firebaserc",
+      "**/.*",
+      "**/node_modules/**",
+      "compare.html",
+      "compare_refs/**",
+      "README.md"
+    ],
+    "cleanUrls": true
+  }
+}
