@@ -2,7 +2,7 @@
 
 小小兵（Minions）圖鑑＋排列組合產生器。純前端靜態網站，所有小小兵皆以 SVG 程式即時繪製。
 
-**Live**: https://minions-guide-dreambo4.web.app
+**Live**: https://minions-guide-74f86.web.app
 
 ## 功能
 
