@@ -64,6 +64,7 @@ function initBuilder() {
       const i = list.findIndex((x) => x.id === state[trait]);
       state[trait] = list[(i + dir + list.length) % list.length].id;
       render();
+      track('trait_change', { trait, value: state[trait], ...comboParams(state) });
     });
   });
 
@@ -77,6 +78,7 @@ function initBuilder() {
     void stage.offsetWidth; /* 重新觸發動畫 */
     stage.classList.add('shuffling');
     render();
+    track('randomize', comboParams(state));
   });
 
   render();
@@ -149,6 +151,10 @@ function initDex() {
             c.setAttribute('aria-pressed', String(c === chip)));
         }
         apply();
+        track('dex_filter', {
+          filter_group: key,
+          filter_value: key === 'named' ? String(filter.named) : filter[key]
+        });
       });
     });
   });
@@ -189,7 +195,9 @@ function initDex() {
     const card = e.target.closest('.card');
     if (!card) return;
     const [eyes, hair, height, girth] = card.dataset.key.split('-');
-    openModal({ eyes, hair, height, girth });
+    const t = { eyes, hair, height, girth };
+    openModal(t);
+    track('view_minion', comboParams(t));
   });
 
   document.getElementById('modal-close').addEventListener('click', () => { modal.hidden = true; });
