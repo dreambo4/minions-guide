@@ -8,7 +8,9 @@
       "**/node_modules/**",
       "compare.html",
       "compare_refs/**",
-      "README.md"
+      "README.md",
+      "tools/**",
+      "og-image.svg"
     ],
     "cleanUrls": true
   }
