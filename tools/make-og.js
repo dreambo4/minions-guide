@@ -39,14 +39,20 @@ const groups = inner.map((c, i) => {
 
 const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
   <defs>
+    <!-- 與工作台舞台區（css/style.css 的 .stage）相同：米白漸層 + 中下方黃色光暈 -->
     <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#232733"/><stop offset="1" stop-color="#1A1D26"/>
+      <stop offset="0" stop-color="#F4F2EB"/><stop offset="1" stop-color="#E9E6DC"/>
     </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.80" r="0.62">
+      <stop offset="0" stop-color="#FFD849" stop-opacity="0.28"/>
+      <stop offset="0.7" stop-color="#FFD849" stop-opacity="0"/>
+    </radialGradient>
   </defs>
   <rect width="1200" height="630" fill="url(#bg)"/>
-  <text x="600" y="92" text-anchor="middle" fill="#FFD849"
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  <text x="600" y="92" text-anchor="middle" fill="#17181C"
         font-family="'Space Grotesk',Helvetica,Arial,sans-serif" font-size="54" font-weight="700">小小兵實驗室</text>
-  <text x="600" y="140" text-anchor="middle" fill="#9AA0AE"
+  <text x="600" y="140" text-anchor="middle" fill="#8A8E96"
         font-family="'Space Grotesk',Helvetica,Arial,sans-serif" font-size="26"
         letter-spacing="3">MINIONS GUIDE · 48 種排列組合</text>
 ${groups}
