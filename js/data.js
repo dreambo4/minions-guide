@@ -34,9 +34,9 @@ const NAMED = [
     opts: { irises: ['#7A9B3E', '#5C3A1E'] }
   },
   {
-    key: 'two-sprout-medium-plump', name: 'Otto', zh: '奧圖',
+    key: 'two-spiky-medium-plump', name: 'Otto', zh: '奧圖',
     movies: ['rog', 'dm4'],
-    note: '《小小兵2》新成員，圓滾滾的身形配頭頂小捲毛，戴著大牙套、話匣子關不住，曾把重要石板換成一顆「寵物石頭」。',
+    note: '《小小兵2》新成員，圓滾滾的身形配一頭炸開的短刺，戴著大牙套、話匣子關不住，曾把重要石板換成一顆「寵物石頭」。',
     opts: { mouth: 'braces' }
   },
   {
@@ -50,14 +50,14 @@ const NAMED = [
     note: '《神偷奶爸2》裡穿洋裝扮成「媽媽」、高唱 Underwear 版 YMCA 的那位。'
   },
   {
-    key: 'two-spiky-medium-average', name: 'Jerry', zh: '傑瑞',
+    key: 'two-sprout-tall-average', name: 'Jerry', zh: '傑瑞',
     movies: ['dm2', 'dm4'],
-    note: '標準身材配短刺頭，膽小但戲很多；曾和 Kevin 一起留守看家，還拿吸塵器互相追逐。'
+    note: '高瘦身形配頭頂呆毛，膽小但戲很多；曾和 Kevin 一起留守看家，還拿吸塵器互相追逐。'
   },
   {
-    key: 'two-spiky-medium-plump', name: 'Jorge', zh: '喬治',
+    key: 'two-spiky-medium-average', name: 'Jorge', zh: '喬治',
     movies: ['dm1'],
-    note: '《神偷奶爸》開場被格魯點名的成員之一；fandom 分類頁的示範例子就是他（雙眼＋中等＋圓胖＋刺蝟頭）。'
+    note: '《神偷奶爸》開場被格魯點名的成員之一；標準身材配刺蝟頭（雙眼＋中等＋標準＋刺蝟頭）。'
   },
   {
     key: 'two-spiky-medium-average', name: 'Phil', zh: '菲爾',
@@ -70,14 +70,14 @@ const NAMED = [
     note: 'BEE-DO！BEE-DO！頂著警報器滅火的單眼消防員。'
   },
   {
-    key: 'one-combed-short-average', name: 'Mel', zh: '梅爾',
+    key: 'one-combed-medium-average', name: 'Mel', zh: '梅爾',
     movies: ['dm3', 'dm4'],
     note: '《神偷奶爸3》裡帶頭罷工出走的頭頭，因為格魯不肯繼續當壞蛋而率眾離家。'
   },
   {
-    key: 'one-sprout-short-average', name: 'James', zh: '詹姆斯',
+    key: 'one-sprout-medium-average', name: 'James', zh: '詹姆斯',
     movies: ['mm'],
-    note: '《小小兵&大怪獸》主角，滿腦子導演夢的單眼小個子，藍色眼珠、頭頂三根捲毛，一心想拍出怪獸大片。',
+    note: '《小小兵&大怪獸》主角，滿腦子導演夢的單眼小小兵，藍色眼珠、頭頂一撮呆毛，一心想拍出怪獸大片。',
     opts: { irises: ['#4A7FBF'] }
   },
   {
@@ -87,9 +87,9 @@ const NAMED = [
     opts: { irises: ['#4A7FBF', '#4A7FBF'] }
   },
   {
-    key: 'two-spiky-tall-average', name: 'Ed', zh: '艾德',
+    key: 'two-spiky-tall-plump', name: 'Ed', zh: '艾德',
     movies: ['mm'],
-    note: '《小小兵&大怪獸》三人組的高個子，一頭往上抓的龐克髮；官方設定為聽障，以手語溝通。'
+    note: '《小小兵&大怪獸》三人組裡最高大的一隻，圓壯身形配一頭往上抓的龐克髮；官方設定為聽障，以手語溝通。'
   }
 ];
 
