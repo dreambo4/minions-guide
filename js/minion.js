@@ -6,7 +6,7 @@ const EYES = [
 ];
 
 const HAIR = [
-  { id: 'spiky',   name: '刺蝟頭', desc: '直立炸開的硬毛，長短皆算此類（Jerry、Jorge 的短刺也是）' },
+  { id: 'spiky',   name: '刺蝟頭', desc: '直立炸開的硬毛，長短皆算此類（Jorge、Otto 的短刺也是）' },
   { id: 'sprout',  name: '呆毛',   desc: '頭頂正中一撮翹起的細毛' },
   { id: 'combed',  name: '中分',   desc: '服貼向兩側分邊的細髮' },
   { id: 'bald',    name: '光頭',   desc: '頭頂全禿，一根不留' }
@@ -20,7 +20,7 @@ const HEIGHT = [
 
 const GIRTH = [
   { id: 'average', name: '標準', desc: '標準寬度的膠囊身形' },
-  { id: 'plump',   name: '圓胖', desc: '明顯加寬的圓滾滾身形，如 Otto、Jerry、Jorge' }
+  { id: 'plump',   name: '圓胖', desc: '明顯加寬的圓滾滾身形，如 Otto、Ed' }
 ];
 
 /* 幾何：以 viewBox 0 0 200 300 為基準；所有身形共用同一條地面線，高矮差在頭頂 */
@@ -195,14 +195,83 @@ function renderMinion(t, opts = {}) {
          stroke="#FFF3BE" stroke-width="1.3" opacity="0.4" fill="none" stroke-linecap="round"/>`;
   }
 
-  /* 手臂貼身、手套帶手指 */
-  const armTop = bibTop - 6;
-  const gloveY = pantsTop + 10;
-  const gloveX = r + 1;
-  const glove = (s) => `
-  <circle cx="${cx + s * gloveX}" cy="${gloveY}" r="7" fill="#17181C"/>
-  <circle cx="${cx + s * (gloveX + 4.5)}" cy="${gloveY + 3.5}" r="3.4" fill="#17181C"/>
-  <circle cx="${cx + s * (gloveX + 1.5)}" cy="${gloveY + 7}" r="3.4" fill="#17181C"/>`;
+  /* 腿：從吊帶褲底往下長出 */
+  /* 依劇照：腿短而寬、兩腿幾乎緊貼，靴子直接接在身體下方 */
+  const legW = Math.round(r * 0.62);  /* 腿寬隨體型縮放，兩腿合計接近身寬 */
+  const legGap = 3;                   /* 兩腿之間只留一條窄縫 */
+  const legInner = legGap / 2;
+  const legOuter = legGap / 2 + legW;
+  const legLen = 9;                   /* 腿只露出極短一截 */
+  const footY = bodyBottom + legLen + 1;
+  /* 膠囊底面陰影的起點：從身體下段開始往下漸暗 */
+  const shadeTop = bodyBottom - Math.round(g.h * 0.20);
+
+  /* 手臂貼身、手套帶手指——依劇照量測，手臂自肩帶下方長出，手套底緣接近靴頂 */
+  /* 劇照：手臂上端消失在斜肩帶底下（肩帶壓在手臂之上），可見段從肩帶「下方」才露出，
+     上寬下窄收成細手腕。肩帶在身側的高度是 bibTop - 10，手臂連結處再往下一截 */
+  const armTop = bibTop - 9;
+  const gloveY = bodyBottom + legLen - 12;
+  /* 手套 x 與手臂末端對齊，避免接縫露出黃色。
+     外撇量隨體寬縮放：固定 +11 會讓體寬窄的高瘦型手臂斜度過陡，
+     在褲腰處與身體邊緣夾出楔形空隙 */
+  const gloveX = r + r * 0.13 + 3;
+  /* 連指手套：袖口窄、手掌寬，下緣兩個圓弧手指；sd 直接乘進座標，不用 transform */
+  const glove = (sd) => {
+    const gx = cx + sd * gloveX;
+    const y = gloveY;
+    return `
+  <path d="M${gx - 5.4} ${y - 6}
+           L${gx + 5.4} ${y - 6}
+           Q${gx + 6.6} ${y - 5.3}, ${gx + 6.8} ${y - 2.8}
+           L${gx + 7} ${y + 2}
+           Q${gx + 7.1} ${y + 5.3}, ${gx + 4.3} ${y + 6.2}
+           Q${gx + 2.2} ${y + 9.2}, ${gx - 0.2} ${y + 8}
+           Q${gx - 2.4} ${y + 10.8}, ${gx - 4.7} ${y + 7.9}
+           Q${gx - 7} ${y + 6}, ${gx - 7} ${y + 2}
+           L${gx - 6.8} ${y - 2.8}
+           Q${gx - 6.6} ${y - 5.3}, ${gx - 5.4} ${y - 6} Z"
+        fill="#17181C"/>`;
+  };
+
+  /* 手臂：上端埋進身體、被斜肩帶蓋住，露出的部分上寬下窄——
+     肩處接近肩寬、往下收成細手腕再接進手套（依劇照量測） */
+  const armLen = gloveY - armTop;
+  const arm = (sd) => {
+    const sx = cx + sd * (r - 11);        /* 可見段的貼身位置 */
+    /* 埋入端另外再往內收：身體是上窄下寬的蛋型，埋入點在 armTop-hide 的高度
+       身寬已經比 r 窄，若沿用 sx 會讓尖端戳出輪廓、在身側夾出楔形缺口 */
+    const tx = cx + sd * (r - 20);
+    const wx = cx + sd * gloveX;          /* 腕：對齊手套中心 */
+    /* 依多張劇照（jerry_pair / rog_five 平舉手臂 / mel_march）量測：
+       手臂直徑約為身寬的 1/7～1/8，比原本細很多 */
+    const upperW = 5.2;                   /* 上臂半寬：略寬於腕，往下收窄 */
+    const wristW = 4.4;                   /* 腕部收窄，接進手套袖口 */
+    const hide = 34;                      /* 上端埋深進身體：尖端藏在輪廓內側，
+                                             否則會頂在身體邊緣上、在交會處折出凹角 */
+    const tipW = 2.6;                     /* 埋入端收尖，外緣不在肩帶上方頂出稜線 */
+    const flare = r * 0.10 + 3.5;         /* 外緣往外撇；加常數項，體寬窄時也確實離開身體 */
+    const yTopA = armTop - hide;
+    return `
+  <path d="M${tx - sd * tipW} ${yTopA}
+           C${sx - sd * upperW} ${armTop + armLen * 0.28},
+            ${wx - sd * (wristW + 2)} ${armTop + armLen * 0.72},
+            ${wx - sd * wristW} ${gloveY + 2}
+           L${wx + sd * wristW} ${gloveY + 2}
+           C${wx + sd * (wristW + flare)} ${armTop + armLen * 0.70},
+            ${sx + sd * (upperW + flare * 0.5)} ${armTop + armLen * 0.24},
+            ${tx + sd * tipW} ${yTopA} Z"
+        fill="${SKIN_SHADE}" stroke="#CBA132" stroke-width="1.5" stroke-linejoin="round"/>`;
+  };
+
+  /* 靴子：與腿同寬的鞋筒 + 略往外的圓鞋頭 */
+  const bootCx = legGap / 2 + legW / 2; /* 靴子中心＝腿中心 */
+  const boot = (sd) => `
+  <g transform="rotate(${sd * 5} ${cx + sd * bootCx} ${footY - 8})">
+    <rect x="${cx + sd * bootCx - legW / 2}" y="${footY - 9}"
+          width="${legW}" height="12" rx="3.5" fill="#17181C"/>
+    <ellipse cx="${cx + sd * (bootCx + 1.5)}" cy="${footY + 1}"
+             rx="${legW / 2 + 2.5}" ry="6" fill="#17181C"/>
+  </g>`;
 
   return `
 <svg viewBox="0 0 200 300" xmlns="http://www.w3.org/2000/svg" class="minion-svg" role="img">
@@ -224,41 +293,73 @@ function renderMinion(t, opts = {}) {
       <stop offset="70%" stop-color="#8A5E0A" stop-opacity="0"/>
       <stop offset="100%" stop-color="#8A5E0A" stop-opacity="0.20"/>
     </linearGradient>
+    <!-- 膠囊底面轉折：正面往下轉成朝地的底面，越接近腿越暗 -->
+    <linearGradient id="capsuleBottomG-${uid}" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0A1428" stop-opacity="0"/>
+      <stop offset="30%" stop-color="#0A1428" stop-opacity="0.12"/>
+      <stop offset="62%" stop-color="#0A1428" stop-opacity="0.38"/>
+      <stop offset="88%" stop-color="#0A1428" stop-opacity="0.62"/>
+      <stop offset="100%" stop-color="#0A1428" stop-opacity="0.70"/>
+    </linearGradient>
     <clipPath id="bodyClip-${uid}">
       <path d="${bodyPath}"/>
     </clipPath>
+    <!-- 身體描邊改畫在吊帶褲「之上」（見下方繪製順序）：
+         褲子被 bodyClip 裁到身體輪廓，邊緣正好壓在描邊上，
+         畫在褲子之前會讓身側輪廓線整段被蓋掉（中等／矮胖最明顯）。
+         這裡只把描邊裁在褲腰下方一點，收尾藏進褲子裡，不橫切過腿 -->
+    <clipPath id="strokeClip-${uid}">
+      <rect x="0" y="0" width="200" height="${pantsTop + 14}"/>
+    </clipPath>
+
   </defs>
 
-  <ellipse cx="${cx}" cy="${bodyBottom + 17}" rx="${r * 0.9}" ry="5" fill="#17181C" opacity="0.12"/>
+  <ellipse cx="${cx}" cy="${footY + 7}" rx="${legW + 16}" ry="4.5" fill="#17181C" opacity="0.13"/>
 
-  <!-- 寬鬆褲管與小圓靴 -->
-  <rect x="${cx - 26}" y="${bodyBottom - 8}" width="23" height="16" rx="5" fill="${DENIM}"/>
-  <rect x="${cx + 3}"  y="${bodyBottom - 8}" width="23" height="16" rx="5" fill="${DENIM}"/>
-  <rect x="${cx - 26}" y="${bodyBottom + 4}" width="23" height="4" rx="2" fill="${DENIM_DARK}" opacity="0.55"/>
-  <rect x="${cx + 3}"  y="${bodyBottom + 4}" width="23" height="4" rx="2" fill="${DENIM_DARK}" opacity="0.55"/>
-  <rect x="${cx - 28}" y="${bodyBottom + 7}" width="26" height="9" rx="4.5" fill="#17181C"/>
-  <rect x="${cx + 2}"  y="${bodyBottom + 7}" width="26" height="9" rx="4.5" fill="#17181C"/>
+  <!-- 兩條腿：頂端深入身體內部（被後畫的身體蓋住），亮度與身體內的吊帶褲一致 -->
+  <rect x="${cx - legOuter}" y="${bodyBottom - 40}" width="${legW}"
+        height="${legLen + 40}" rx="${legW / 2}" fill="${DENIM}"/>
+  <rect x="${cx + legInner}" y="${bodyBottom - 40}" width="${legW}"
+        height="${legLen + 40}" rx="${legW / 2}" fill="${DENIM}"/>
+  <!-- 用與身體同一條漸層延續暗化，讓交界完全看不出接縫 -->
+  <rect x="${cx - legOuter}" y="${bodyTop}" width="${legW}"
+        height="${bodyBottom - bodyTop + legLen}" rx="${legW / 2}" fill="url(#shadeG-${uid})"/>
+  <rect x="${cx + legInner}" y="${bodyTop}" width="${legW}"
+        height="${bodyBottom - bodyTop + legLen}" rx="${legW / 2}" fill="url(#shadeG-${uid})"/>
 
-  <!-- 手臂：貼著身側垂下 -->
-  <path d="M${cx - r + 3} ${armTop} q -10 ${(gloveY - armTop) * 0.5}, -5 ${gloveY - armTop}"
-        stroke="${SKIN_SHADE}" stroke-width="11" fill="none" stroke-linecap="round"/>
-  <path d="M${cx + r - 3} ${armTop} q 10 ${(gloveY - armTop) * 0.5}, 5 ${gloveY - armTop}"
-        stroke="${SKIN_SHADE}" stroke-width="11" fill="none" stroke-linecap="round"/>
+  <!-- 膠囊底面陰影（腿的部分）：與身體同一條漸層、同一 y 基準，交界處自然連續 -->
+  <rect x="${cx - legOuter}" y="${shadeTop}" width="${legW}"
+        height="${bodyBottom + legLen - shadeTop}" rx="${legW / 2}"
+        fill="url(#capsuleBottomG-${uid})"/>
+  <rect x="${cx + legInner}" y="${shadeTop}" width="${legW}"
+        height="${bodyBottom + legLen - shadeTop}" rx="${legW / 2}"
+        fill="url(#capsuleBottomG-${uid})"/>
+
+  <!-- 腿位於膠囊底下、受身體遮蔽，整體再壓暗一階 -->
+  <rect x="${cx - legOuter}" y="${bodyBottom - 40}" width="${legW}"
+        height="${legLen + 40}" rx="${legW / 2}" fill="#0A1428" opacity="0.13"/>
+  <rect x="${cx + legInner}" y="${bodyBottom - 40}" width="${legW}"
+        height="${legLen + 40}" rx="${legW / 2}" fill="#0A1428" opacity="0.13"/>
+
+  <!-- 靴子：厚實圓靴＋往外的鞋頭，略微外八 -->
+  ${boot(-1)}${boot(1)}
+
+  <!-- 手臂：填充造型，肩部深入身體內側，露出的部分自然從身側鼓出（無接縫） -->
+  ${arm(-1)}${arm(1)}
 
   <!-- 蛋型身體 -->
-  <path d="${bodyPath}" fill="url(#skinG-${uid})" stroke="#CBA132" stroke-width="1.5"/>
-
+  <path d="${bodyPath}" fill="url(#skinG-${uid})"/>
   <g clip-path="url(#bodyClip-${uid})">
     <!-- 護目鏡頭帶：整圈繞過身體 -->
     <rect x="${cx - r}" y="${eyeY - 7}" width="${g.w}" height="14" fill="#1A1C20"/>
 
     <!-- 吊帶褲 -->
     <rect x="${cx - r}" y="${pantsTop}" width="${g.w}" height="${bodyBottom - pantsTop + 4}" fill="${DENIM}"/>
-    <rect x="${cx - bibW / 2}" y="${bibTop}" width="${bibW}" height="${pantsTop - bibTop + 6}" rx="6" fill="${DENIM}"/>
+    <rect x="${cx - bibW / 2}" y="${bibTop}" width="${bibW}" height="${pantsTop - bibTop + 6}" rx="9" fill="${DENIM}"/>
     <!-- 斜肩帶 -->
-    <path d="M${cx - r - 2} ${bibTop - 12} L${cx - bibW / 2 + 5} ${bibTop + 5}"
+    <path d="M${cx - r + 3} ${bibTop - 10} L${cx - bibW / 2 - 1} ${bibTop + 4}"
           stroke="${DENIM}" stroke-width="8" stroke-linecap="round"/>
-    <path d="M${cx + r + 2} ${bibTop - 12} L${cx + bibW / 2 - 5} ${bibTop + 5}"
+    <path d="M${cx + r - 3} ${bibTop - 10} L${cx + bibW / 2 + 1} ${bibTop + 4}"
           stroke="${DENIM}" stroke-width="8" stroke-linecap="round"/>
     <!-- 鈕扣 -->
     <circle cx="${cx - bibW / 2 + 6}" cy="${bibTop + 6}" r="3.2" fill="#17181C"/>
@@ -271,9 +372,17 @@ function renderMinion(t, opts = {}) {
     <circle cx="${cx}" cy="${bibTop + 19.5}" r="6.6" fill="none" stroke="#AECBEF" stroke-width="1.8"/>
     <path d="M${cx + 3.6} ${bibTop + 16.4} a 4.2 4.2 0 1 0 0.5 5 h -2.9"
           fill="none" stroke="#AECBEF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- 膠囊底面陰影（身體的部分）：正面往下轉成朝地的底面，越靠近腿越暗 -->
+    <rect x="${cx - r}" y="${shadeTop}" width="${g.w}" height="${bodyBottom + legLen - shadeTop}"
+          fill="url(#capsuleBottomG-${uid})"/>
     <!-- 頂光：上亮下暗 -->
     <rect x="${cx - r}" y="${bodyTop}" width="${g.w}" height="${g.h}" fill="url(#shadeG-${uid})"/>
   </g>
+
+  <!-- 身體描邊：沿用 bodyPath 整條輪廓，畫在吊帶褲之上避免被褲子蓋掉，
+       再裁掉褲腰以下的部分（不寫死結束 y，體型再矮也不會缺一段） -->
+  <path d="${bodyPath}" clip-path="url(#strokeClip-${uid})"
+        fill="none" stroke="#CBA132" stroke-width="1.5" stroke-linecap="round"/>
 
   <!-- 手套（帶手指） -->
   ${glove(-1)}${glove(1)}
