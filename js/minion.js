@@ -209,8 +209,12 @@ function renderMinion(t, opts = {}) {
   /* 手臂貼身、手套帶手指——依劇照量測，手臂自肩帶下方長出，手套底緣接近靴頂 */
   /* 劇照：手臂上端消失在斜肩帶底下（肩帶壓在手臂之上），可見段從肩帶「下方」才露出，
      上寬下窄收成細手腕。肩帶在身側的高度是 bibTop - 10，手臂連結處再往下一截 */
-  const armTop = bibTop - 9;
-  const gloveY = bodyBottom + legLen - 12;
+  /* 整條手臂（含手套）的垂直位置：兩者一起位移才是平移，只動一端會變成拉長。
+     上移量隨身高不同：高個子肩線更高，要多上移一些 */
+  const ARM_SHIFT_GEO = { short: 12, medium: 12, tall: 19 };
+  const ARM_SHIFT = ARM_SHIFT_GEO[t.height] || 12;
+  const armTop = bibTop - 9 - ARM_SHIFT;
+  const gloveY = bodyBottom + legLen - 12 - ARM_SHIFT;
   /* 手套 x 與手臂末端對齊，避免接縫露出黃色。
      外撇量隨體寬縮放：固定 +11 會讓體寬窄的高瘦型手臂斜度過陡，
      在褲腰處與身體邊緣夾出楔形空隙 */
@@ -244,8 +248,8 @@ function renderMinion(t, opts = {}) {
     const wx = cx + sd * gloveX;          /* 腕：對齊手套中心 */
     /* 依多張劇照（jerry_pair / rog_five 平舉手臂 / mel_march）量測：
        手臂直徑約為身寬的 1/7～1/8，比原本細很多 */
-    const upperW = 5.2;                   /* 上臂半寬：略寬於腕，往下收窄 */
-    const wristW = 4.4;                   /* 腕部收窄，接進手套袖口 */
+    const upperW = 1;                   /* 上臂半寬：略寬於腕，往下收窄 */
+    const wristW = 2;                   /* 腕部收窄，接進手套袖口 */
     const hide = 34;                      /* 上端埋深進身體：尖端藏在輪廓內側，
                                              否則會頂在身體邊緣上、在交會處折出凹角 */
     const tipW = 2.6;                     /* 埋入端收尖，外緣不在肩帶上方頂出稜線 */
